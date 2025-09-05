@@ -1,9 +1,6 @@
 package com.example.catalog.controller;
 
-import com.example.catalog.customer.Customer;
-import com.example.catalog.customer.CustomerRepository;
-import com.example.catalog.customer.CustomerRequestDTO;
-import com.example.catalog.customer.CustomerResponseDTO;
+import com.example.catalog.customer.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +22,24 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveCustomer(@RequestBody CustomerRequestDTO data) {
+    public ResponseEntity<Customer> saveCustomer(@RequestBody CustomerRequestDTO data) {
         Customer customer = new Customer(data);
         repository.save(customer);
-        return new ResponseEntity<>("Created with phone number: " + data.phoneNumber(), HttpStatusCode.valueOf(201));
+        return new ResponseEntity<>(customer, HttpStatusCode.valueOf(201));
     }
 
+    @PutMapping
+    public ResponseEntity<String> updateCustomer(@RequestBody CustomerUpdateDTO data) {
+        Customer customer = repository.getReferenceById(data.phoneNumber());
+        customer.setName(data.name());
+        repository.save(customer);
+        return new ResponseEntity<>(data.response(), HttpStatusCode.valueOf(200));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteCustomer(@RequestParam CustomerDeleteDTO data) {
+        Customer customer = repository.getReferenceById(data.phoneNumber());
+        repository.delete(customer);
+        return new ResponseEntity<>(data.response(), HttpStatusCode.valueOf(200));
+    }
 }
