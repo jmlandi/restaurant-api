@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -15,14 +16,11 @@ import java.util.Date;
 public class Customer {
     @Id
     private String phoneNumber;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
+    @Setter
+    private String name;
 
     public Customer(CustomerRequestDTO data) {
         this.phoneNumber = data.phoneNumber();
-        this.firstName = data.firstName();
-        this.lastName = data.lastName();
-        this.dateOfBirth = data.dateOfBirth();
+        this.name = data.name();
     }
 }
